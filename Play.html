@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>抗战胜利80周年记忆游戏</title>
+    <title>抗戰勝利80週年記憶遊戲</title>
     <style>
         * {
             box-sizing: border-box;
@@ -12,7 +12,7 @@
         }
         
         body {
-            font-family: 'Microsoft YaHei', sans-serif;
+            font-family: 'Microsoft JhengHei', sans-serif;
             background: linear-gradient(to bottom, #f9f2d9, #f5e6ca);
             color: #8B0000;
             min-height: 100vh;
@@ -105,7 +105,9 @@
             position: relative;
             overflow: hidden;
         }
-        
+        .card span {
+            user-select: none;
+        }
         .card::before {
             content: "";
             position: absolute;
@@ -225,71 +227,71 @@
 </head>
 <body>
     <header>
-        <h1>抗战胜利80周年记忆游戏</h1>
-        <p class="subtitle">匹配卡片，了解历史，缅怀先烈</p>
-        <p class="date">1937-1945 · 2025年纪念</p>
+        <h1>抗戰勝利80週年記憶遊戲</h1>
+        <p class="subtitle">匹配卡片，了解歷史，緬懷先烈</p>
+        <p class="date">1937-1945 · 2025年紀念</p>
     </header>
     
     <div class="game-info">
         <div class="info-item">
-            <p>步数</p>
+            <p>步數</p>
             <span id="moves">0</span>
         </div>
         <div class="info-item">
-            <p>匹配数</p>
+            <p>匹配數</p>
             <span id="matches">0</span>/8
         </div>
         <div class="info-item">
-            <p>时间</p>
+            <p>時間</p>
             <span id="timer">0</span>s
         </div>
     </div>
     
     <div class="game-container" id="game-container">
-        <!-- 卡片将通过JavaScript动态生成 -->
+        <!-- 卡片由 JavaScript 動態生成 -->
     </div>
     
     <div class="controls">
-        <button id="restart">重新开始</button>
+        <button id="restart">重新開始</button>
     </div>
     
     <div class="history-fact">
-        <h3>抗战历史知识</h3>
-        <p id="fact-text">中国人民抗日战争是中华民族历史上最伟大的卫国战争，是中国人民反抗日本帝国主义侵略的正义战争。</p>
+        <h3>抗戰歷史知識</h3>
+        <p id="fact-text">中國人民抗日戰爭是中華民族歷史上最偉大的衛國戰爭，是中國人民反抗日本帝國主義侵略的正義戰爭。</p>
     </div>
     
     <div class="victory-badge" id="victory-badge">
-        <h2>恭喜你获胜！</h2>
-        <p>你成功完成了抗战胜利记忆游戏</p>
-        <p>缅怀先烈，珍爱和平</p>
-        <button id="close-victory">继续游戏</button>
+        <h2>恭喜你獲勝！</h2>
+        <p>你成功完成了抗戰勝利記憶遊戲</p>
+        <p>緬懷先烈，珍愛和平</p>
+        <button id="close-victory">繼續遊戲</button>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // 游戏元素 - 使用抗战胜利相关符号
+            // 遊戲符號 - 抗戰勝利相關符號
             const gameSymbols = [
                 '🇨🇳', '🕊️', '🎖️', '✊', '⭐', '🔔', '🏛️', '📜'
             ];
             
-            // 历史知识库
+            // 歷史知識庫
             const historicalFacts = [
-                "中国人民抗日战争始于1937年7月7日的卢沟桥事变，持续了8年之久。",
-                "1945年8月15日，日本宣布无条件投降，9月2日正式签署投降书。",
-                "抗战期间，中国军民伤亡超过3500万人，经济损失达6000亿美元。",
-                "抗日战争是第二次世界大战的重要组成部分，中国战场是东方主战场。",
-                "百团大战是八路军在华北地区发动的一次大规模进攻战役，沉重打击了日军。",
-                "台儿庄战役是中国军队在抗战中取得的首次重大胜利，极大地鼓舞了全国军民。",
-                "抗战期间，中国得到了苏联、美国等反法西斯盟国的援助。",
-                "抗战胜利是近代以来中国抗击外敌入侵的第一次完全胜利。",
-                "九一八事变是日本帝国主义侵华的开端，发生在1931年9月18日。",
-                "南京大屠杀是抗战期间最惨痛的事件之一，30万以上同胞遇难。",
-                "平型关大捷是八路军出师抗日首战胜利，打破了日军不可战胜的神话。",
-                "滇缅公路是抗战时期中国与国际联系的重要通道，被称为生命线。",
-                "飞虎队是美国志愿航空队，为中国的抗战提供了重要空中支援。",
-                "八路军、新四军是中国共产党领导的抗日武装力量。",
-                "抗战期间，海外华侨为祖国抗战捐款捐物，做出了巨大贡献。",
-                "毛泽东《论持久战》为中国人民抗日战争指明了方向和道路。"
+                "中國人民抗日戰爭始於1937年7月7日的盧溝橋事變，持續了8年之久。",
+                "1945年8月15日，日本宣布無條件投降，9月2日正式簽署投降書。",
+                "抗戰期間，中國軍民傷亡超過3500萬人，經濟損失達6000億美元。",
+                "抗日戰爭是第二次世界大戰的重要組成部分，中國戰場是東方主戰場。",
+                "百團大戰是八路軍在華北地區發動的一次大規模進攻戰役，沉重打擊了日軍。",
+                "臺兒莊戰役是中國軍隊在抗戰中取得的首次重大勝利，極大地鼓舞了全國軍民。",
+                "抗戰期間，中國得到了蘇聯、美國等反法西斯盟國的援助。",
+                "抗戰勝利是近代以來中國抗擊外敵入侵的第一次完全勝利。",
+                "九一八事變是日本帝國主義侵華的開端，發生在1931年9月18日。",
+                "南京大屠殺是抗戰期間最慘痛的事件之一，30萬以上同胞遇難。",
+                "平型關大捷是八路軍出師抗日首戰勝利，打破了日軍不可戰勝的神話。",
+                "滇緬公路是抗戰時期中國與國際聯繫的重要通道，被稱為生命線。",
+                "飛虎隊是美國志願航空隊，為中國的抗戰提供了重要空中支援。",
+                "八路軍、新四軍是中國共產黨領導的抗日武裝力量。",
+                "抗戰期間，海外華僑為祖國抗戰捐款捐物，做出了巨大貢獻。",
+                "毛澤東《論持久戰》為中國人民抗日戰爭指明了方向和道路。"
             ];
             
             const gameContainer = document.getElementById('game-container');
@@ -311,7 +313,7 @@
             let timerInterval;
             let usedFacts = [];
             
-            // 初始化游戏
+            // 初始化遊戲
             function initGame() {
                 clearInterval(timerInterval);
                 moves = 0;
@@ -322,22 +324,22 @@
                 timerElement.textContent = timer;
                 usedFacts = [];
                 
-                // 清空游戏容器
+                // 清空容器
                 gameContainer.innerHTML = '';
                 
-                // 创建卡片对
+                // 創建卡片對
                 let gameCards = [];
                 gameSymbols.forEach(symbol => {
                     gameCards.push(symbol);
                     gameCards.push(symbol);
                 });
                 
-                // 随机排序卡片
+                // 隨機排序
                 gameCards.sort(() => Math.random() - 0.5);
                 
-                // 创建卡片元素
+                // 生成卡片元素
                 cards = [];
-                gameCards.forEach((symbol, index) => {
+                gameCards.forEach((symbol) => {
                     const card = document.createElement('div');
                     card.classList.add('card');
                     card.dataset.symbol = symbol;
@@ -347,14 +349,11 @@
                     cards.push(card);
                 });
                 
-                // 更新历史知识
                 updateHistoricalFact();
-                
-                // 启动计时器
                 startTimer();
             }
             
-            // 开始计时器
+            // 開始計時
             function startTimer() {
                 clearInterval(timerInterval);
                 timerInterval = setInterval(() => {
@@ -363,7 +362,7 @@
                 }, 1000);
             }
             
-            // 翻转卡片
+            // 翻牌
             function flipCard() {
                 if (lockBoard) return;
                 if (this === firstCard) return;
@@ -372,24 +371,19 @@
                 this.classList.add('flipped');
                 
                 if (!hasFlippedCard) {
-                    // 第一次点击
                     hasFlippedCard = true;
                     firstCard = this;
                     return;
                 }
                 
-                // 第二次点击
                 secondCard = this;
                 moves++;
                 movesElement.textContent = moves;
-                
-                // 每次移动刷新历史知识
                 updateHistoricalFact();
-                
                 checkForMatch();
             }
             
-            // 检查匹配
+            // 檢查匹配
             function checkForMatch() {
                 let isMatch = firstCard.dataset.symbol === secondCard.dataset.symbol;
                 
@@ -399,7 +393,6 @@
                     matchesElement.textContent = matches;
                     
                     if (matches === gameSymbols.length) {
-                        // 游戏胜利
                         setTimeout(() => {
                             victoryBadge.classList.add('show');
                         }, 1000);
@@ -409,47 +402,37 @@
                 }
             }
             
-            // 禁用已匹配的卡片
+            // 鎖定已配對
             function disableCards() {
                 firstCard.classList.add('matched');
                 secondCard.classList.add('matched');
-                
                 resetBoard();
             }
             
-            // 翻回不匹配的卡片
+            // 翻回不匹配卡片
             function unflipCards() {
                 lockBoard = true;
-                
                 setTimeout(() => {
                     firstCard.classList.remove('flipped');
                     secondCard.classList.remove('flipped');
-                    
                     resetBoard();
                 }, 1000);
             }
             
-            // 重置棋盘
+            // 重置棋盤狀態
             function resetBoard() {
                 [hasFlippedCard, lockBoard] = [false, false];
                 [firstCard, secondCard] = [null, null];
             }
             
-            // 更新历史知识
+            // 更新歷史知識
             function updateHistoricalFact() {
-                // 如果所有知识都已显示过，重置使用列表
                 if (usedFacts.length >= historicalFacts.length) {
                     usedFacts = [];
                 }
-                
-                // 获取未使用过的随机知识
                 let availableFacts = historicalFacts.filter(fact => !usedFacts.includes(fact));
                 const randomFact = availableFacts[Math.floor(Math.random() * availableFacts.length)];
-                
-                // 添加到已使用列表
                 usedFacts.push(randomFact);
-                
-                // 添加淡入淡出效果
                 factText.style.opacity = 0;
                 setTimeout(() => {
                     factText.textContent = randomFact;
@@ -457,15 +440,12 @@
                 }, 300);
             }
             
-            // 事件监听
             restartButton.addEventListener('click', initGame);
-            
             closeVictoryButton.addEventListener('click', () => {
                 victoryBadge.classList.remove('show');
                 initGame();
             });
             
-            // 初始化游戏
             initGame();
         });
     </script>
