@@ -1,453 +1,434 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>抗戰勝利80週年記憶遊戲</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body {
-            font-family: 'Microsoft JhengHei', sans-serif;
-            background: linear-gradient(to bottom, #f9f2d9, #f5e6ca);
-            color: #8B0000;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            width: 100%;
-            padding: 15px;
-            background: rgba(139, 0, 0, 0.1);
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            color: #8B0000;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            color: #B22222;
-            margin-bottom: 10px;
-        }
-        
-        .date {
-            font-size: 1rem;
-            color: #8B0000;
-            font-weight: bold;
-        }
-        
-        .game-info {
-            display: flex;
-            justify-content: space-between;
-            width: 90%;
-            max-width: 700px;
-            margin-bottom: 20px;
-            background: rgba(255, 215, 0, 0.2);
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .info-item {
-            text-align: center;
-            flex: 1;
-        }
-        
-        .info-item span {
-            font-weight: bold;
-            color: #8B0000;
-            font-size: 1.5rem;
-            display: block;
-            margin-top: 5px;
-        }
-        
-        .game-container {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-gap: 12px;
-            width: 90%;
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 15px;
-            background: rgba(139, 0, 0, 0.1);
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .card {
-            height: 120px;
-            background: linear-gradient(to bottom, #8B0000, #6A0A0A);
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2.5rem;
-            color: transparent;
-            transform-style: preserve-3d;
-            transition: transform 0.5s, background 0.5s;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-        .card span {
-            user-select: none;
-        }
-        .card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="50%" font-size="50" text-anchor="middle" fill="rgba(255,255,255,0.1)" dominant-baseline="middle">80</text></svg>');
-            background-size: cover;
-            opacity: 0.3;
-        }
-        
-        .card.flipped {
-            transform: rotateY(180deg);
-            background: linear-gradient(to bottom, #FFD700, #E5C100);
-            color: #8B0000;
-        }
-        
-        .card.matched {
-            background: linear-gradient(to bottom, #32CD32, #2AB32A);
-            color: white;
-            transform: rotateY(180deg);
-            cursor: default;
-        }
-        
-        .controls {
-            margin-top: 30px;
-            display: flex;
-            gap: 20px;
-        }
-        
-        button {
-            padding: 12px 25px;
-            background: #8B0000;
-            color: #FFD700;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            font-weight: bold;
-            transition: all 0.3s;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        
-        button:hover {
-            background: #B22222;
-            transform: translateY(-2px);
-        }
-        
-        .history-fact {
-            margin-top: 30px;
-            width: 90%;
-            max-width: 700px;
-            background: rgba(255, 215, 0, 0.3);
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: all 0.5s;
-        }
-        
-        .history-fact h3 {
-            color: #8B0000;
-            margin-bottom: 10px;
-            border-bottom: 2px solid #8B0000;
-            padding-bottom: 5px;
-        }
-        
-        #fact-text {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .victory-badge {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            background: linear-gradient(to bottom, #FFD700, #8B0000);
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            color: white;
-            z-index: 100;
-            box-shadow: 0 0 0 100vmax rgba(0,0,0,0.8);
-            transition: transform 0.5s;
-        }
-        
-        .victory-badge.show {
-            transform: translate(-50%, -50%) scale(1);
-        }
-        
-        @media (max-width: 600px) {
-            .game-container {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .card {
-                height: 100px;
-                font-size: 2rem;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .game-info {
-                flex-direction: column;
-                gap: 10px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>抗戰勝利80週年記憶遊戲</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Microsoft JhengHei', sans-serif;
+      background: linear-gradient(to bottom, #f9f2d9, #f5e6ca);
+      color: #8B0000;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      width: 100%;
+      padding: 15px;
+      background: rgba(139, 0, 0, 0.1);
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1 {
+      font-size: 2.2rem;
+      color: #8B0000;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      margin-bottom: 10px;
+    }
+    
+    .subtitle {
+      font-size: 1.1rem;
+      color: #B22222;
+      margin-bottom: 10px;
+    }
+    
+    .date {
+      font-size: 1rem;
+      color: #8B0000;
+      font-weight: bold;
+    }
+    
+    .game-info {
+      display: flex;
+      justify-content: space-between;
+      width: 90%;
+      max-width: 700px;
+      margin-bottom: 20px;
+      background: rgba(255, 215, 0, 0.2);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .info-item {
+      text-align: center;
+      flex: 1;
+    }
+    
+    .info-item span {
+      font-weight: bold;
+      color: #8B0000;
+      font-size: 1.5rem;
+      display: block;
+      margin-top: 5px;
+    }
+    
+    .game-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 12px;
+      width: 90%;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 15px;
+      background: rgba(139, 0, 0, 0.1);
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card {
+      perspective: 1000px;
+      height: 120px;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-front {
+      background: linear-gradient(to bottom, #8B0000, #6A0A0A);
+      color: transparent;
+    }
+
+    .card-back {
+      background: linear-gradient(to bottom, #FFD700, #E5C100);
+      color: #8B0000;
+      font-size: 2rem;
+      transform: rotateY(180deg);
+    }
+
+    .card.matched .card-back {
+      background: linear-gradient(to bottom, #32CD32, #2AB32A);
+      color: white;
+    }
+
+    .controls {
+      margin-top: 30px;
+      display: flex;
+      gap: 20px;
+    }
+    
+    button {
+      padding: 12px 25px;
+      background: #8B0000;
+      color: #FFD700;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: bold;
+      transition: all 0.3s;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    button:hover {
+      background: #B22222;
+      transform: translateY(-2px);
+    }
+    
+    .history-fact {
+      margin-top: 30px;
+      width: 90%;
+      max-width: 700px;
+      background: rgba(255, 215, 0, 0.3);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.5s;
+    }
+    
+    .history-fact h3 {
+      color: #8B0000;
+      margin-bottom: 10px;
+      border-bottom: 2px solid #8B0000;
+      padding-bottom: 5px;
+    }
+    
+    #fact-text {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .victory-badge {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: linear-gradient(to bottom, #FFD700, #8B0000);
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      color: white;
+      z-index: 100;
+      box-shadow: 0 0 0 100vmax rgba(0,0,0,0.8);
+      transition: transform 0.5s;
+    }
+    
+    .victory-badge.show {
+      transform: translate(-50%, -50%) scale(1);
+    }
+    
+    @media (max-width: 600px) {
+      .game-container {
+        grid-template-columns: repeat(4, 1fr); /* 固定四列 */
+      }
+      
+      .card {
+        height: 80px;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .game-info {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>抗戰勝利80週年記憶遊戲</h1>
-        <p class="subtitle">匹配卡片，了解歷史，緬懷先烈</p>
-        <p class="date">1937-1945 · 2025年紀念</p>
-    </header>
-    
-    <div class="game-info">
-        <div class="info-item">
-            <p>步數</p>
-            <span id="moves">0</span>
-        </div>
-        <div class="info-item">
-            <p>匹配數</p>
-            <span id="matches">0</span>/8
-        </div>
-        <div class="info-item">
-            <p>時間</p>
-            <span id="timer">0</span>s
-        </div>
+  <header>
+    <h1>抗戰勝利80週年記憶遊戲</h1>
+    <p class="subtitle">匹配卡片，了解歷史，緬懷先烈</p>
+    <p class="date">1937-1945 · 2025年紀念</p>
+  </header>
+  
+  <div class="game-info">
+    <div class="info-item">
+      <p>步數</p>
+      <span id="moves">0</span>
     </div>
-    
-    <div class="game-container" id="game-container">
-        <!-- 卡片由 JavaScript 動態生成 -->
+    <div class="info-item">
+      <p>匹配數</p>
+      <span id="matches">0</span>/8
     </div>
-    
-    <div class="controls">
-        <button id="restart">重新開始</button>
+    <div class="info-item">
+      <p>時間</p>
+      <span id="timer">0</span>s
     </div>
-    
-    <div class="history-fact">
-        <h3>抗戰歷史知識</h3>
-        <p id="fact-text">中國人民抗日戰爭是中華民族歷史上最偉大的衛國戰爭，是中國人民反抗日本帝國主義侵略的正義戰爭。</p>
-    </div>
-    
-    <div class="victory-badge" id="victory-badge">
-        <h2>恭喜你獲勝！</h2>
-        <p>你成功完成了抗戰勝利記憶遊戲</p>
-        <p>緬懷先烈，珍愛和平</p>
-        <button id="close-victory">繼續遊戲</button>
-    </div>
+  </div>
+  
+  <div class="game-container" id="game-container"></div>
+  
+  <div class="controls">
+    <button id="restart">重新開始</button>
+  </div>
+  
+  <div class="history-fact">
+    <h3>抗戰歷史知識</h3>
+    <p id="fact-text">中國人民抗日戰爭是中華民族歷史上最偉大的衛國戰爭，是中國人民反抗日本帝國主義侵略的正義戰爭。</p>
+  </div>
+  
+  <div class="victory-badge" id="victory-badge">
+    <h2>恭喜你獲勝！</h2>
+    <p>你成功完成了抗戰勝利記憶遊戲</p>
+    <p>緬懷先烈，珍愛和平</p>
+    <button id="close-victory">繼續遊戲</button>
+  </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // 遊戲符號 - 抗戰勝利相關符號
-            const gameSymbols = [
-                '🇨🇳', '🕊️', '🎖️', '✊', '⭐', '🔔', '🏛️', '📜'
-            ];
-            
-            // 歷史知識庫
-            const historicalFacts = [
-                "中國人民抗日戰爭始於1937年7月7日的盧溝橋事變，持續了8年之久。",
-                "1945年8月15日，日本宣布無條件投降，9月2日正式簽署投降書。",
-                "抗戰期間，中國軍民傷亡超過3500萬人，經濟損失達6000億美元。",
-                "抗日戰爭是第二次世界大戰的重要組成部分，中國戰場是東方主戰場。",
-                "百團大戰是八路軍在華北地區發動的一次大規模進攻戰役，沉重打擊了日軍。",
-                "臺兒莊戰役是中國軍隊在抗戰中取得的首次重大勝利，極大地鼓舞了全國軍民。",
-                "抗戰期間，中國得到了蘇聯、美國等反法西斯盟國的援助。",
-                "抗戰勝利是近代以來中國抗擊外敵入侵的第一次完全勝利。",
-                "九一八事變是日本帝國主義侵華的開端，發生在1931年9月18日。",
-                "南京大屠殺是抗戰期間最慘痛的事件之一，30萬以上同胞遇難。",
-                "平型關大捷是八路軍出師抗日首戰勝利，打破了日軍不可戰勝的神話。",
-                "滇緬公路是抗戰時期中國與國際聯繫的重要通道，被稱為生命線。",
-                "飛虎隊是美國志願航空隊，為中國的抗戰提供了重要空中支援。",
-                "八路軍、新四軍是中國共產黨領導的抗日武裝力量。",
-                "抗戰期間，海外華僑為祖國抗戰捐款捐物，做出了巨大貢獻。",
-                "毛澤東《論持久戰》為中國人民抗日戰爭指明了方向和道路。"
-            ];
-            
-            const gameContainer = document.getElementById('game-container');
-            const movesElement = document.getElementById('moves');
-            const matchesElement = document.getElementById('matches');
-            const timerElement = document.getElementById('timer');
-            const restartButton = document.getElementById('restart');
-            const factText = document.getElementById('fact-text');
-            const victoryBadge = document.getElementById('victory-badge');
-            const closeVictoryButton = document.getElementById('close-victory');
-            
-            let cards = [];
-            let hasFlippedCard = false;
-            let lockBoard = false;
-            let firstCard, secondCard;
-            let moves = 0;
-            let matches = 0;
-            let timer = 0;
-            let timerInterval;
-            let usedFacts = [];
-            
-            // 初始化遊戲
-            function initGame() {
-                clearInterval(timerInterval);
-                moves = 0;
-                matches = 0;
-                timer = 0;
-                movesElement.textContent = moves;
-                matchesElement.textContent = matches;
-                timerElement.textContent = timer;
-                usedFacts = [];
-                
-                // 清空容器
-                gameContainer.innerHTML = '';
-                
-                // 創建卡片對
-                let gameCards = [];
-                gameSymbols.forEach(symbol => {
-                    gameCards.push(symbol);
-                    gameCards.push(symbol);
-                });
-                
-                // 隨機排序
-                gameCards.sort(() => Math.random() - 0.5);
-                
-                // 生成卡片元素
-                cards = [];
-                gameCards.forEach((symbol) => {
-                    const card = document.createElement('div');
-                    card.classList.add('card');
-                    card.dataset.symbol = symbol;
-                    card.innerHTML = `<span>${symbol}</span>`;
-                    card.addEventListener('click', flipCard);
-                    gameContainer.appendChild(card);
-                    cards.push(card);
-                });
-                
-                updateHistoricalFact();
-                startTimer();
-            }
-            
-            // 開始計時
-            function startTimer() {
-                clearInterval(timerInterval);
-                timerInterval = setInterval(() => {
-                    timer++;
-                    timerElement.textContent = timer;
-                }, 1000);
-            }
-            
-            // 翻牌
-            function flipCard() {
-                if (lockBoard) return;
-                if (this === firstCard) return;
-                if (this.classList.contains('matched')) return;
-                
-                this.classList.add('flipped');
-                
-                if (!hasFlippedCard) {
-                    hasFlippedCard = true;
-                    firstCard = this;
-                    return;
-                }
-                
-                secondCard = this;
-                moves++;
-                movesElement.textContent = moves;
-                updateHistoricalFact();
-                checkForMatch();
-            }
-            
-            // 檢查匹配
-            function checkForMatch() {
-                let isMatch = firstCard.dataset.symbol === secondCard.dataset.symbol;
-                
-                if (isMatch) {
-                    disableCards();
-                    matches++;
-                    matchesElement.textContent = matches;
-                    
-                    if (matches === gameSymbols.length) {
-                        setTimeout(() => {
-                            victoryBadge.classList.add('show');
-                        }, 1000);
-                    }
-                } else {
-                    unflipCards();
-                }
-            }
-            
-            // 鎖定已配對
-            function disableCards() {
-                firstCard.classList.add('matched');
-                secondCard.classList.add('matched');
-                resetBoard();
-            }
-            
-            // 翻回不匹配卡片
-            function unflipCards() {
-                lockBoard = true;
-                setTimeout(() => {
-                    firstCard.classList.remove('flipped');
-                    secondCard.classList.remove('flipped');
-                    resetBoard();
-                }, 1000);
-            }
-            
-            // 重置棋盤狀態
-            function resetBoard() {
-                [hasFlippedCard, lockBoard] = [false, false];
-                [firstCard, secondCard] = [null, null];
-            }
-            
-            // 更新歷史知識
-            function updateHistoricalFact() {
-                if (usedFacts.length >= historicalFacts.length) {
-                    usedFacts = [];
-                }
-                let availableFacts = historicalFacts.filter(fact => !usedFacts.includes(fact));
-                const randomFact = availableFacts[Math.floor(Math.random() * availableFacts.length)];
-                usedFacts.push(randomFact);
-                factText.style.opacity = 0;
-                setTimeout(() => {
-                    factText.textContent = randomFact;
-                    factText.style.opacity = 1;
-                }, 300);
-            }
-            
-            restartButton.addEventListener('click', initGame);
-            closeVictoryButton.addEventListener('click', () => {
-                victoryBadge.classList.remove('show');
-                initGame();
-            });
-            
-            initGame();
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const gameSymbols = ['🇨🇳', '🕊️', '🎖️', '✊', '⭐', '🔔', '🏛️', '📜'];
+      const historicalFacts = [
+        "中國人民抗日戰爭始於1937年7月7日的盧溝橋事變，持續了8年之久。",
+        "1945年8月15日，日本宣布無條件投降，9月2日正式簽署投降書。",
+        "抗戰期間，中國軍民傷亡超過3500萬人，經濟損失達6000億美元。",
+        "抗日戰爭是第二次世界大戰的重要組成部分，中國戰場是東方主戰場。",
+        "百團大戰是八路軍在華北地區發動的一次大規模進攻戰役，沉重打擊了日軍。",
+        "臺兒莊戰役是中國軍隊在抗戰中取得的首次重大勝利，極大地鼓舞了全國軍民。",
+        "抗戰期間，中國得到了蘇聯、美國等反法西斯盟國的援助。",
+        "抗戰勝利是近代以來中國抗擊外敵入侵的第一次完全勝利。",
+        "九一八事變是日本帝國主義侵華的開端，發生在1931年9月18日。",
+        "南京大屠殺是抗戰期間最慘痛的事件之一，30萬以上同胞遇難。",
+        "平型關大捷是八路軍出師抗日首戰勝利，打破了日軍不可戰勝的神話。",
+        "滇緬公路是抗戰時期中國與國際聯繫的重要通道，被稱為生命線。",
+        "飛虎隊是美國志願航空隊，為中國的抗戰提供了重要空中支援。",
+        "八路軍、新四軍是中國共產黨領導的抗日武裝力量。",
+        "抗戰期間，海外華僑為祖國抗戰捐款捐物，做出了巨大貢獻。",
+        "毛澤東《論持久戰》為中國人民抗日戰爭指明了方向和道路。"
+      ];
+      
+      const gameContainer = document.getElementById('game-container');
+      const movesElement = document.getElementById('moves');
+      const matchesElement = document.getElementById('matches');
+      const timerElement = document.getElementById('timer');
+      const restartButton = document.getElementById('restart');
+      const factText = document.getElementById('fact-text');
+      const victoryBadge = document.getElementById('victory-badge');
+      const closeVictoryButton = document.getElementById('close-victory');
+      
+      let hasFlippedCard = false;
+      let lockBoard = false;
+      let firstCard, secondCard;
+      let moves = 0;
+      let matches = 0;
+      let timer = 0;
+      let timerInterval;
+      let usedFacts = [];
+      
+      function initGame() {
+        clearInterval(timerInterval);
+        moves = 0;
+        matches = 0;
+        timer = 0;
+        movesElement.textContent = moves;
+        matchesElement.textContent = matches;
+        timerElement.textContent = timer;
+        usedFacts = [];
+        gameContainer.innerHTML = '';
+        
+        let gameCards = [];
+        gameSymbols.forEach(symbol => {
+          gameCards.push(symbol);
+          gameCards.push(symbol);
         });
-    </script>
+        
+        gameCards.sort(() => Math.random() - 0.5);
+        
+        gameCards.forEach(symbol => {
+          const card = document.createElement('div');
+          card.classList.add('card');
+          card.dataset.symbol = symbol;
+          card.innerHTML = `
+            <div class="card-inner">
+              <div class="card-front"></div>
+              <div class="card-back">${symbol}</div>
+            </div>`;
+          card.addEventListener('click', flipCard);
+          gameContainer.appendChild(card);
+        });
+        
+        updateHistoricalFact();
+        startTimer();
+      }
+      
+      function startTimer() {
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+          timer++;
+          timerElement.textContent = timer;
+        }, 1000);
+      }
+      
+      function flipCard() {
+        if (lockBoard) return;
+        if (this === firstCard) return;
+        if (this.classList.contains('matched')) return;
+        
+        this.classList.add('flipped');
+        
+        if (!hasFlippedCard) {
+          hasFlippedCard = true;
+          firstCard = this;
+          return;
+        }
+        
+        secondCard = this;
+        moves++;
+        movesElement.textContent = moves;
+        updateHistoricalFact();
+        checkForMatch();
+      }
+      
+      function checkForMatch() {
+        let isMatch = firstCard.dataset.symbol === secondCard.dataset.symbol;
+        if (isMatch) {
+          disableCards();
+          matches++;
+          matchesElement.textContent = matches;
+          if (matches === gameSymbols.length) {
+            setTimeout(() => {
+              victoryBadge.classList.add('show');
+            }, 800);
+          }
+        } else {
+          unflipCards();
+        }
+      }
+      
+      function disableCards() {
+        firstCard.classList.add('matched');
+        secondCard.classList.add('matched');
+        resetBoard();
+      }
+      
+      function unflipCards() {
+        lockBoard = true;
+        setTimeout(() => {
+          firstCard.classList.remove('flipped');
+          secondCard.classList.remove('flipped');
+          resetBoard();
+        }, 1000);
+      }
+      
+      function resetBoard() {
+        [hasFlippedCard, lockBoard] = [false, false];
+        [firstCard, secondCard] = [null, null];
+      }
+      
+      function updateHistoricalFact() {
+        if (usedFacts.length >= historicalFacts.length) {
+          usedFacts = [];
+        }
+        let availableFacts = historicalFacts.filter(fact => !usedFacts.includes(fact));
+        const randomFact = availableFacts[Math.floor(Math.random() * availableFacts.length)];
+        usedFacts.push(randomFact);
+        factText.style.opacity = 0;
+        setTimeout(() => {
+          factText.textContent = randomFact;
+          factText.style.opacity = 1;
+        }, 300);
+      }
+      
+      restartButton.addEventListener('click', initGame);
+      closeVictoryButton.addEventListener('click', () => {
+        victoryBadge.classList.remove('show');
+        initGame();
+      });
+      
+      initGame();
+    });
+  </script>
 </body>
 </html>
